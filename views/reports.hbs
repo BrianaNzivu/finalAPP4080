@@ -1,0 +1,60 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lecturer Rating Reports</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <div class="container reports-container">
+      <h1 class="reports-heading">Lecturer Rating Reports</h1>
+      <div class="table-container">
+        {{#if lecturers.length}}
+          <table class="reports-table">
+            <thead>
+              <tr>
+                <th style="text-align:left; text-decoration:underline;">Lecturer
+                  Name</th>
+                <th style="text-align:left; text-decoration:underline;">Average
+                  Rating</th>
+                <th style="text-align:left; text-decoration:underline;">Total
+                  Ratings Count</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each lecturers}}
+                <tr>
+                  <td>{{this.firstName}} {{this.lastName}}</td>
+                  <td>{{this.averageRating}}</td>
+                  <td>{{this.ratingsCount}}</td>
+                </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        {{else}}
+          <div class="message-container">
+            <p class="empty-reports-message">No ratings available!!</p>
+          </div>
+        {{/if}}
+      </div>
+      {{#each lecturers}}
+        <div class="comments-container">
+          <h2
+            style="text-decoration:underline; font-size:0.98rem"
+          >{{this.firstName}}
+            {{this.lastName}}
+            - Comments</h2>
+          <div class="comments-list">
+            <ul>
+              {{#each this.comments}}
+                <li style="font-style:italic">{{this}}</li>
+              {{/each}}
+            </ul>
+          </div>
+        </div>
+      {{/each}}
+      <a href="/" class="route-btn">Back to Home</a>
+    </div>
+  </body>
+</html>
