@@ -24,6 +24,12 @@ app.post("/rate", function (request, response) {
   console.log("rating: ", rating);
   console.log("comment: ", comment);
 
+  // Check if the rating is valid (between 0 and 10)
+  if (rating < 0 || rating > 10) {
+    return response.status(400).send('Invalid rating. Please enter a rating between 0 and 10.');
+  }
+
+  // Create a lecturerData object
   const lecturerData = {
     firstName,
     lastName,
@@ -77,25 +83,30 @@ app.get("/reports", function (request, response) {
   const lecturerData = ratings.reduce(
     (result, { firstName, lastName, rating, comment }) => {
       const fullName = firstName + " " + lastName;
-      if (!result[fullName]) {
-        result[fullName] = {
-          firstName,
-          lastName,
-          totalRating: 0,
-          averageRating: 0,
-          comments: [],
-          ratingsCount: 0,
-        };
+
+      if (rating < 0 || rating > 10) {
+        if (!result[fullName]) {
+          result[fullName] = {
+            firstName,
+            lastName,
+            totalRating: 0,
+            averageRating: 0,
+            comments: [],
+            ratingsCount: 0,
+          };
+        }
+
+        result[fullName].totalRating += rating;
+        result[fullName].averageRating =
+          result[fullName].totalRating /
+          ratings.filter((r) => r.firstName + " " + r.lastName === fullName)
+            .length;
+        result[fullName].comments.push(comment);
+        result[fullName].ratingsCount = ratings.filter(
+          (r) => r.firstName + " " + r.lastName === fullName
+        ).length;
       }
-      result[fullName].totalRating += rating;
-      result[fullName].averageRating =
-        result[fullName].totalRating /
-        ratings.filter((r) => r.firstName + " " + r.lastName === fullName)
-          .length;
-      result[fullName].comments.push(comment);
-      result[fullName].ratingsCount = ratings.filter(
-        (r) => r.firstName + " " + r.lastName === fullName
-      ).length;
+
       return result;
     },
     {}
@@ -109,3 +120,5 @@ app.get("/reports", function (request, response) {
 
 app.listen(port);
 console.log("Heyyy Node server started on port", port);
+
+module.exports = app; // for testing
