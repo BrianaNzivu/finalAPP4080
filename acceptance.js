@@ -34,4 +34,9 @@ const { remote } = require('webdriverio');
     } finally {
         await browser.deleteSession();
     }
-})();
+})().catch((err) => {
+    // Handle any errors that occurred during the test
+    console.error(err);
+    // Ensure the WebDriver session is deleted, even in case of an error
+    return browser.deleteSession();
+});
